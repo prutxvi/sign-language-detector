@@ -1,3 +1,5 @@
+import time
+
 import cv2
 import mediapipe as mp
 import numpy as np
@@ -58,6 +60,7 @@ def get_finger_states(lm, is_right):
 
 def main():
     cap = cv2.VideoCapture(0)
+    prev_time = 0
 
     while True:
         ret, img = cap.read()
@@ -96,9 +99,16 @@ def main():
             if (left, right) in ISL_TWO_HAND:
                 detected = ISL_TWO_HAND[(left, right)]
 
+        curr_time = time.time()
+        fps = 1 / (curr_time - prev_time)
+        prev_time = curr_time
+
         if detected:
             cv2.putText(img, f"ISL: {detected}", (50, 50),
                         cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2)
+
+        cv2.putText(img, f"FPS: {fps:.1f}", (10, img.shape[0] - 10),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
 
         cv2.imshow(WINDOW_NAME, img)
         if cv2.waitKey(1) & 0xFF == QUIT_KEY:
