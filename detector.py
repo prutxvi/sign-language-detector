@@ -16,6 +16,8 @@ from config import (
     GREEN,
     GRAY,
     LIGHT_GRAY,
+    DETECTION_COLOR,
+    UI_COLOR,
 )
 
 mp_hands = mp.solutions.hands
@@ -116,10 +118,10 @@ def main():
         prev_time = curr_time
 
         hand_count = len(hand_states)
-        draw_text(img, f"Hands: {hand_count}", (10, 30), color=GRAY)
+        draw_text(img, f"Hands: {hand_count}", (10, 30), color=UI_COLOR)
 
         if detected:
-            draw_text(img, f"ISL: {detected}", (50, 50), scale=1.2, color=GREEN, thickness=2)
+            draw_text(img, f"ISL: {detected}", (50, 50), scale=1.2, color=DETECTION_COLOR, thickness=2)
 
         draw_text(img, f"FPS: {fps:.1f}", (10, img.shape[0] - 10), color=LIGHT_GRAY)
 
