@@ -1,0 +1,13 @@
+[build-system]
+requires = ["setuptools>=64"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "isl-gesture-detector"
+version = "1.0.0"
+description = "Real-time Indian Sign Language alphabet detector"
+readme = "README.md"
+license = {text = "MIT"}
+authors = [{name = "prutxvi"}]
+requires-python = ">=3.10"
+dependencies = ["opencv-python", "mediapipe", "numpy"]
