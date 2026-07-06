@@ -1,24 +1,38 @@
 # ISL Gesture Detector
 
-This is a real-time Indian Sign Language (ISL) alphabet detector built using Python, OpenCV, and MediaPipe. It supports static hand gestures using one or two hands and maps them to ISL letters like A, B, C, etc.
+Real-time Indian Sign Language (ISL) alphabet detector using Python, OpenCV, and MediaPipe. Supports static hand gestures with one or two hands.
 
-## ✨ Features
+## Features
 
 - Detects ISL static signs from hand gestures
-- Works with both one-hand and two-hand inputs
-- Real-time video feed and letter overlay
-- Built with MediaPipe for accurate tracking
+- Works with one-hand and two-hand inputs
+- Real-time video feed with letter and FPS overlay
+- Built with MediaPipe for accurate landmark tracking
 
-## 🧠 How It Works
+## How It Works
 
-- Tracks hand landmarks using MediaPipe.
-- Calculates which fingers are extended.
-- Matches the finger states with known ISL patterns.
-- Displays the detected alphabet on screen.
+- Tracks hand landmarks using MediaPipe
+- Calculates which fingers are extended
+- Matches finger states against known ISL patterns
+- Displays detected alphabet on screen
 
-## 📦 Requirements
+## Supported Letters
 
-Install dependencies using:
+| One Hand | Two Hand |
+|----------|----------|
+| A, B, C, D, E, I, L, U, V, W, Y | M, W, J, BOTH B |
+
+## Requirements
+
+Install dependencies:
 
 ```bash
 pip install -r requirements.txt
+
+## Usage
+
+```bash
+python detector.py
+```
+
+Press **Q** to quit the application.
