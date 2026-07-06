@@ -99,20 +99,15 @@ def main():
 
                 mp_drawing.draw_landmarks(img, handLms, mp_hands.HAND_CONNECTIONS)
 
-        detected = None
+        detected_text = None
 
         if len(hand_states) == 1:
-            if hand_states[0] in ISL_ONE_HAND:
-                detected = ISL_ONE_HAND[hand_states[0]]
-
+            detected_text = ISL_ONE_HAND.get(hand_states[0])
         elif len(hand_states) == 2:
+            left, right = hand_states
             if handedness[0]:
                 left, right = hand_states[1], hand_states[0]
-            else:
-                left, right = hand_states[0], hand_states[1]
-
-            if (left, right) in ISL_TWO_HAND:
-                detected = ISL_TWO_HAND[(left, right)]
+            detected_text = ISL_TWO_HAND.get((left, right))
 
         curr_time = time.time()
         fps = 1 / (curr_time - prev_time)
@@ -121,8 +116,8 @@ def main():
         hand_count = len(hand_states)
         draw_text(img, f"Hands: {hand_count}", (10, 30), color=UI_COLOR)
 
-        if detected:
-            draw_text(img, f"ISL: {detected}", (50, 50), scale=1.2, color=DETECTION_COLOR, thickness=2)
+        if detected_text:
+            draw_text(img, f"ISL: {detected_text}", (50, 50), scale=1.2, color=DETECTION_COLOR, thickness=2)
 
         draw_text(img, f"FPS: {fps:.1f}", (10, img.shape[0] - 10), color=LIGHT_GRAY)
 
