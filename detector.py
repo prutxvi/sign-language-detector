@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Real-time ISL alphabet detector using MediaPipe."""
 
 import logging
