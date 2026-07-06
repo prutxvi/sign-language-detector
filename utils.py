@@ -1,3 +1,4 @@
+"""Utility functions for the ISL detector."""
 """Utility functions for drawing and display."""
 import cv2
 
