@@ -46,6 +46,7 @@ ISL_TWO_HAND = {
 }
 
 def get_finger_states(lm, is_right: bool) -> tuple:
+    """Determine which fingers are extended from hand landmarks."""
     tip_ids = [4, 8, 12, 16, 20]
     fingers = []
 
