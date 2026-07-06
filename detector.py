@@ -51,18 +51,18 @@ ISL_TWO_HAND = {
     ((0, 1, 1, 1, 1), (0, 1, 1, 1, 1)): "BOTH B",  # Both hands open
 }
 
-def get_finger_states(lm, is_right: bool) -> tuple:
+def get_finger_states(landmarks, is_right: bool) -> tuple:
     """Determine which fingers are extended from hand landmarks."""
     tip_ids = [4, 8, 12, 16, 20]
     fingers = []
 
     if is_right:
-        fingers.append(1 if lm[4].x < lm[3].x else 0)
+        fingers.append(1 if landmarks[4].x < landmarks[3].x else 0)
     else:
-        fingers.append(1 if lm[4].x > lm[3].x else 0)
+        fingers.append(1 if landmarks[4].x > landmarks[3].x else 0)
 
     for i in range(1, 5):
-        fingers.append(1 if lm[tip_ids[i]].y < lm[tip_ids[i]-2].y else 0)
+        fingers.append(1 if landmarks[tip_ids[i]].y < landmarks[tip_ids[i] - 2].y else 0)
 
     return tuple(fingers)
 
