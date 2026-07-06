@@ -1,3 +1,4 @@
+"""Utility functions for drawing and display."""
 import cv2
 
 
