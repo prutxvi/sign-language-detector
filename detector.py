@@ -103,6 +103,9 @@ def main():
         fps = 1 / (curr_time - prev_time)
         prev_time = curr_time
 
+        cv2.putText(img, "Press Q to quit", (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (100, 100, 100), 1)
+
         if detected:
             cv2.putText(img, f"ISL: {detected}", (50, 50),
                         cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2)
