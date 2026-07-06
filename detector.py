@@ -61,6 +61,7 @@ def get_finger_states(lm, is_right: bool) -> tuple:
     return tuple(fingers)
 
 def main():
+    """Run the ISL detector loop."""
     cap = cv2.VideoCapture(0)
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
