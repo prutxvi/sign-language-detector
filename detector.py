@@ -12,17 +12,18 @@ hands = mp_hands.Hands(
     min_tracking_confidence=0.5
 )
 
-# Single hand static signs
 ISL_ONE_HAND = {
     (1, 0, 0, 0, 0): "A",
     (0, 1, 1, 1, 1): "B",
     (1, 1, 1, 1, 1): "C",
     (0, 1, 0, 0, 0): "D",
+    (0, 0, 0, 0, 0): "E",
     (0, 0, 0, 0, 1): "I",
     (1, 1, 0, 0, 0): "L",
+    (1, 1, 1, 0, 0): "U",
     (0, 1, 1, 0, 0): "V",
     (0, 1, 1, 1, 0): "W",
-    (1, 0, 0, 0, 1): "Y"
+    (1, 0, 0, 0, 1): "Y",
 }
 
 # Two-hand signs (tuples of left and right finger states)
