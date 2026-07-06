@@ -12,6 +12,10 @@ from config import (
     QUIT_KEY,
     FRAME_WIDTH,
     FRAME_HEIGHT,
+    FONT,
+    GREEN,
+    GRAY,
+    LIGHT_GRAY,
 )
 
 mp_hands = mp.solutions.hands
@@ -111,12 +115,12 @@ def main():
         fps = 1 / (curr_time - prev_time)
         prev_time = curr_time
 
-        draw_text(img, "Press Q to quit", (10, 30), color=(100, 100, 100))
+        draw_text(img, "Press Q to quit", (10, 30), color=GRAY)
 
         if detected:
-            draw_text(img, f"ISL: {detected}", (50, 50), scale=1.2, color=(0, 255, 0), thickness=2)
+            draw_text(img, f"ISL: {detected}", (50, 50), scale=1.2, color=GREEN, thickness=2)
 
-        draw_text(img, f"FPS: {fps:.1f}", (10, img.shape[0] - 10))
+        draw_text(img, f"FPS: {fps:.1f}", (10, img.shape[0] - 10), color=LIGHT_GRAY)
 
         cv2.imshow(WINDOW_NAME, img)
         if cv2.waitKey(1) & 0xFF == QUIT_KEY:
