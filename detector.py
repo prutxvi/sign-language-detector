@@ -1,5 +1,6 @@
 """Real-time ISL alphabet detector using MediaPipe."""
 
+import logging
 import time
 
 import cv2
