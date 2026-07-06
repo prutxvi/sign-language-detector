@@ -49,57 +49,56 @@ def get_finger_states(lm, is_right):
 
     return tuple(fingers)
 
-# Webcam
-cap = cv2.VideoCapture(0)
+def main():
+    cap = cv2.VideoCapture(0)
 
-while True:
-    ret, img = cap.read()
-    if not ret:
-        break
+    while True:
+        ret, img = cap.read()
+        if not ret:
+            break
 
-    img = cv2.flip(img, 1)
-    rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    results = hands.process(rgb)
+        img = cv2.flip(img, 1)
+        rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        results = hands.process(rgb)
 
-    hand_states = []
-    handedness = []
+        hand_states = []
+        handedness = []
 
-    if results.multi_hand_landmarks:
-        for handLms, handed in zip(results.multi_hand_landmarks, results.multi_handedness):
-            is_right = handed.classification[0].label == "Right"
-            lm = handLms.landmark
-            fs = get_finger_states(lm, is_right)
-            hand_states.append(fs)
-            handedness.append(is_right)
+        if results.multi_hand_landmarks:
+            for handLms, handed in zip(results.multi_hand_landmarks, results.multi_handedness):
+                is_right = handed.classification[0].label == "Right"
+                lm = handLms.landmark
+                fs = get_finger_states(lm, is_right)
+                hand_states.append(fs)
+                handedness.append(is_right)
 
-            mp_drawing.draw_landmarks(img, handLms, mp_hands.HAND_CONNECTIONS)
+                mp_drawing.draw_landmarks(img, handLms, mp_hands.HAND_CONNECTIONS)
 
-    detected = None
+        detected = None
 
-    # One hand
-    if len(hand_states) == 1:
-        if hand_states[0] in ISL_ONE_HAND:
-            detected = ISL_ONE_HAND[hand_states[0]]
+        if len(hand_states) == 1:
+            if hand_states[0] in ISL_ONE_HAND:
+                detected = ISL_ONE_HAND[hand_states[0]]
 
-    # Two hands
-    elif len(hand_states) == 2:
-        # Ensure left, right order
-        if handedness[0]:
-            left, right = hand_states[1], hand_states[0]
-        else:
-            left, right = hand_states[0], hand_states[1]
+        elif len(hand_states) == 2:
+            if handedness[0]:
+                left, right = hand_states[1], hand_states[0]
+            else:
+                left, right = hand_states[0], hand_states[1]
 
-        if (left, right) in ISL_TWO_HAND:
-            detected = ISL_TWO_HAND[(left, right)]
+            if (left, right) in ISL_TWO_HAND:
+                detected = ISL_TWO_HAND[(left, right)]
 
-    # Display
-    if detected:
-        cv2.putText(img, f"ISL: {detected}", (50, 50),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2)
+        if detected:
+            cv2.putText(img, f"ISL: {detected}", (50, 50),
+                        cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2)
 
-    cv2.imshow("Two-Hand ISL Detector", img)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        cv2.imshow("Two-Hand ISL Detector", img)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
 
-cap.release()
-cv2.destroyAllWindows()
+    cap.release()
+    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    main()
