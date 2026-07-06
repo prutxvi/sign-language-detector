@@ -1,15 +1,21 @@
 import cv2
 import mediapipe as mp
 import numpy as np
+from config import (
+    MIN_DETECTION_CONFIDENCE,
+    MIN_TRACKING_CONFIDENCE,
+    MAX_NUM_HANDS,
+    WINDOW_NAME,
+    QUIT_KEY,
+)
 
-# Init MediaPipe
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 hands = mp_hands.Hands(
     static_image_mode=False,
-    max_num_hands=2,
-    min_detection_confidence=0.7,
-    min_tracking_confidence=0.5
+    max_num_hands=MAX_NUM_HANDS,
+    min_detection_confidence=MIN_DETECTION_CONFIDENCE,
+    min_tracking_confidence=MIN_TRACKING_CONFIDENCE,
 )
 
 ISL_ONE_HAND = {
@@ -94,8 +100,8 @@ def main():
             cv2.putText(img, f"ISL: {detected}", (50, 50),
                         cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2)
 
-        cv2.imshow("Two-Hand ISL Detector", img)
-        if cv2.waitKey(1) & 0xFF == ord('q'):
+        cv2.imshow(WINDOW_NAME, img)
+        if cv2.waitKey(1) & 0xFF == QUIT_KEY:
             break
 
     cap.release()
