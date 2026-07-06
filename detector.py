@@ -83,6 +83,7 @@ def main() -> None:\n    \"\"\"Run the ISL detector loop.\"\"\"\n    cap = cv2.V
     logging.info(f"Camera resolution: {actual_w}x{actual_h}")
     prev_time = 0
     fps_samples = []
+    letter_history = []
 
     while True:
         ret, img = cap.read()
@@ -110,11 +111,17 @@ def main() -> None:\n    \"\"\"Run the ISL detector loop.\"\"\"\n    cap = cv2.V
 
         if len(hand_states) == 1:
             detected_text = ISL_ONE_HAND.get(hand_states[0])
+            if detected_text:
+                letter_history.append(detected_text)
+                letter_history = letter_history[-10:]
         elif len(hand_states) == 2:
             left, right = hand_states
             if handedness[0]:
                 left, right = hand_states[1], hand_states[0]
             detected_text = ISL_TWO_HAND.get((left, right))
+            if detected_text:
+                letter_history.append(detected_text)
+                letter_history = letter_history[-10:]
 
         curr_time = time.time()
         fps = 1 / (curr_time - prev_time)
