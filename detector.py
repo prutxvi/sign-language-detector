@@ -1,3 +1,4 @@
+"""Real-time ISL alphabet detector using MediaPipe."""
 import time
 
 import cv2
