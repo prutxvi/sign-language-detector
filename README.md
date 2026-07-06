@@ -35,4 +35,15 @@ pip install -r requirements.txt
 python detector.py
 ```
 
-Press **Q** to quit the application.
+Press **Q** to quit. Press **S** to save a screenshot.
+
+## Project Structure
+
+```
+├── detector.py      # Main detection logic
+├── config.py        # Configuration constants
+├── utils.py         # Drawing utilities
+├── main.py          # Entry point
+├── requirements.txt # Dependencies
+└── README.md        # Documentation
+```
