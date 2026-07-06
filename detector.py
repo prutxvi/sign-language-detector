@@ -124,8 +124,12 @@ def main():
         draw_text(img, f"FPS: {fps:.1f}", (10, img.shape[0] - 10), color=LIGHT_GRAY)
 
         cv2.imshow(WINDOW_NAME, img)
-        if cv2.waitKey(1) & 0xFF == QUIT_KEY:
+        key = cv2.waitKey(1) & 0xFF
+        if key == QUIT_KEY:
             break
+        elif key == ord('s'):
+            cv2.imwrite("isl_screenshot.png", img)
+            print("Screenshot saved")
 
     cap.release()
     cv2.destroyAllWindows()
