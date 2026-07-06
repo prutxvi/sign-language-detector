@@ -9,6 +9,8 @@ from config import (
     MAX_NUM_HANDS,
     WINDOW_NAME,
     QUIT_KEY,
+    FRAME_WIDTH,
+    FRAME_HEIGHT,
 )
 
 mp_hands = mp.solutions.hands
@@ -58,6 +60,8 @@ def get_finger_states(lm, is_right: bool) -> tuple:
 
 def main():
     cap = cv2.VideoCapture(0)
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
     prev_time = 0
 
     while True:
