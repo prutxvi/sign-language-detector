@@ -79,6 +79,7 @@ def main() -> None:\n    \"\"\"Run the ISL detector loop.\"\"\"\n    cap = cv2.V
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
     prev_time = 0
+    fps_samples = []
 
     while True:
         ret, img = cap.read()
@@ -115,6 +116,9 @@ def main() -> None:\n    \"\"\"Run the ISL detector loop.\"\"\"\n    cap = cv2.V
         curr_time = time.time()
         fps = 1 / (curr_time - prev_time)
         prev_time = curr_time
+        fps_samples.append(fps)
+        if len(fps_samples) > 30:
+            fps_samples.pop(0)
 
         hand_count = len(hand_states)
         draw_text(img, f"Hands: {hand_count}", (10, 30), color=UI_COLOR)
@@ -122,7 +126,7 @@ def main() -> None:\n    \"\"\"Run the ISL detector loop.\"\"\"\n    cap = cv2.V
         if detected_text:
             draw_text(img, f"ISL: {detected_text}", (50, 50), scale=1.2, color=DETECTION_COLOR, thickness=2)
 
-        draw_text(img, f"FPS: {fps:.1f}", (10, img.shape[0] - 10), color=LIGHT_GRAY)
+        draw_text(img, f"FPS: {fps_samples[-1]:.1f}", (10, img.shape[0] - 10), color=LIGHT_GRAY)
 
         cv2.imshow(WINDOW_NAME, img)
         key = cv2.waitKey(1) & 0xFF
