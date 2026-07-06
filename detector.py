@@ -2,7 +2,7 @@ import time
 
 import cv2
 import mediapipe as mp
-import numpy as np
+from utils import draw_text
 from config import (
     MIN_DETECTION_CONFIDENCE,
     MIN_TRACKING_CONFIDENCE,
@@ -105,15 +105,12 @@ def main():
         fps = 1 / (curr_time - prev_time)
         prev_time = curr_time
 
-        cv2.putText(img, "Press Q to quit", (10, 30),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (100, 100, 100), 1)
+        draw_text(img, "Press Q to quit", (10, 30), color=(100, 100, 100))
 
         if detected:
-            cv2.putText(img, f"ISL: {detected}", (50, 50),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2)
+            draw_text(img, f"ISL: {detected}", (50, 50), scale=1.2, color=(0, 255, 0), thickness=2)
 
-        cv2.putText(img, f"FPS: {fps:.1f}", (10, img.shape[0] - 10),
-                    cv2.FONT_HERSHEY_SIMPLEX, 0.6, (200, 200, 200), 1)
+        draw_text(img, f"FPS: {fps:.1f}", (10, img.shape[0] - 10))
 
         cv2.imshow(WINDOW_NAME, img)
         if cv2.waitKey(1) & 0xFF == QUIT_KEY:
