@@ -135,6 +135,9 @@ def main() -> None:\n    \"\"\"Run the ISL detector loop.\"\"\"\n    cap = cv2.V
 
         if detected_text:
             draw_text(img, f"ISL: {detected_text}", (50, 50), scale=1.2, color=DETECTION_COLOR, thickness=2)
+            if letter_history:
+                history_str = " ".join(letter_history[-5:])
+                draw_text(img, f"Hist: {history_str}", (50, 85), color=LIGHT_GRAY)
 
         draw_text(img, f"FPS: {fps_samples[-1]:.1f}", (10, img.shape[0] - 10), color=LIGHT_GRAY)
 
