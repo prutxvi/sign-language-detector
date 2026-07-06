@@ -115,7 +115,8 @@ def main():
         fps = 1 / (curr_time - prev_time)
         prev_time = curr_time
 
-        draw_text(img, "Press Q to quit", (10, 30), color=GRAY)
+        hand_count = len(hand_states)
+    draw_text(img, f"Hands: {hand_count}", (10, 30), color=GRAY)
 
         if detected:
             draw_text(img, f"ISL: {detected}", (50, 50), scale=1.2, color=GREEN, thickness=2)
