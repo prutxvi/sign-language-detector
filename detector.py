@@ -78,6 +78,9 @@ def main() -> None:\n    \"\"\"Run the ISL detector loop.\"\"\"\n    cap = cv2.V
         return
     cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
     cap.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
+    actual_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    actual_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    logging.info(f"Camera resolution: {actual_w}x{actual_h}")
     prev_time = 0
     fps_samples = []
 
