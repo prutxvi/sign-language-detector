@@ -42,17 +42,15 @@ ISL_TWO_HAND = {
     ((0, 1, 1, 1, 1), (0, 1, 1, 1, 1)): "BOTH B",  # Both hands open
 }
 
-def get_finger_states(lm, is_right):
+def get_finger_states(lm, is_right: bool) -> tuple:
     tip_ids = [4, 8, 12, 16, 20]
     fingers = []
 
-    # Thumb
     if is_right:
         fingers.append(1 if lm[4].x < lm[3].x else 0)
     else:
         fingers.append(1 if lm[4].x > lm[3].x else 0)
 
-    # Other fingers
     for i in range(1, 5):
         fingers.append(1 if lm[tip_ids[i]].y < lm[tip_ids[i]-2].y else 0)
 
