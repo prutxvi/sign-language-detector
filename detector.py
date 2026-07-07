@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 """Real-time ISL alphabet detector using MediaPipe."""
 
+# -*- coding: utf-8 -*-
 import logging
 import time
 
