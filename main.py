@@ -1,5 +1,6 @@
 """Entry point for the ISL detector."""
-from detector import main
+from detector # -*- coding: utf-8 -*-
+import main
 
 if __name__ == "__main__":
     main()
