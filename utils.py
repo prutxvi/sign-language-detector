@@ -1,5 +1,6 @@
 """Utility functions for the ISL detector."""
 """Utility functions for drawing and display."""
+# -*- coding: utf-8 -*-
 import cv2
 
 
