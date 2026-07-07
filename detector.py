@@ -143,7 +143,7 @@ def main() -> None:\n    \"\"\"Run the ISL detector loop.\"\"\"\n    cap = cv2.V
         draw_text(img, f"FPS: {fps_samples[-1]:.1f}", (10, img.shape[0] - 10), color=LIGHT_GRAY)
 
         cv2.rectangle(img, (0, 0), (img.shape[1], 28), (20, 20, 20), -1)
-        draw_text(img, "ISL Detector", (10, 20), color=UI_COLOR)
+        draw_text(img, "ISL Detector v1.1", (10, 20), color=UI_COLOR)
         cv2.imshow(WINDOW_NAME, img)
         key = cv2.waitKey(1) & 0xFF
         if key == QUIT_KEY:
