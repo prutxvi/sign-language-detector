@@ -84,6 +84,7 @@ def main() -> None:\n    \"\"\"Run the ISL detector loop.\"\"\"\n    cap = cv2.V
     logging.info(f"Camera resolution: {actual_w}x{actual_h}")
     prev_time = 0
     fps_samples = []
+    frame_count = 0
     letter_history = []
 
     while True:
@@ -128,6 +129,7 @@ def main() -> None:\n    \"\"\"Run the ISL detector loop.\"\"\"\n    cap = cv2.V
         fps = 1 / (curr_time - prev_time)
         prev_time = curr_time
         fps_samples.append(fps)
+        frame_count += 1
         if len(fps_samples) > 30:
             fps_samples.pop(0)
 
