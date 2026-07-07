@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """Configuration constants for the ISL gesture detector."""
 MIN_DETECTION_CONFIDENCE = 0.7
 MIN_TRACKING_CONFIDENCE = 0.5
