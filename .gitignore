@@ -5,3 +5,7 @@ __pycache__/
 *.jpg
 .DS_Store
 
+
+*.swp
+*.swo
+*~
