@@ -1,3 +1,4 @@
+from __future__ import annotations
 """Utility functions for the ISL detector."""
 """Utility functions for drawing and display."""
 # -*- coding: utf-8 -*-

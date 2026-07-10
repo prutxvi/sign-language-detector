@@ -1,3 +1,4 @@
+from __future__ import annotations
 # -*- coding: utf-8 -*-
 """Configuration constants for the ISL gesture detector."""
 MIN_DETECTION_CONFIDENCE = 0.7
