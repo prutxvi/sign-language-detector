@@ -24,3 +24,8 @@ build/
 *.pem
 *.key
 .env.local
+
+# Secrets
+*.pem
+*.key
+.env.local
