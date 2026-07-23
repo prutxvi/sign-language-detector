@@ -1,5 +1,2 @@
 *.py text diff=python
 *.md text
-*.yml text
-*.yaml text
-*.json text
