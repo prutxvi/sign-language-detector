@@ -1,28 +1,55 @@
+from __future__ import annotations
+# -*- coding: utf-8 -*-
+"""Real-time ISL alphabet detector using MediaPipe."""
+
+# -*- coding: utf-8 -*-
+import logging
+import time
+
 import cv2
 import mediapipe as mp
-import numpy as np
+from utils import draw_text
+from config import (
+    MIN_DETECTION_CONFIDENCE,
+    MIN_TRACKING_CONFIDENCE,
+    MAX_NUM_HANDS,
+    WINDOW_NAME,
+    QUIT_KEY,
+    FRAME_WIDTH,
+    FRAME_HEIGHT,
+    FONT,
+    GREEN,
+    GRAY,
+    LIGHT_GRAY,
+    DETECTION_COLOR,
+    UI_COLOR,
+)
 
-# Init MediaPipe
 mp_hands = mp.solutions.hands
 mp_drawing = mp.solutions.drawing_utils
 hands = mp_hands.Hands(
     static_image_mode=False,
-    max_num_hands=2,
-    min_detection_confidence=0.7,
-    min_tracking_confidence=0.5
+    max_num_hands=MAX_NUM_HANDS,
+    min_detection_confidence=MIN_DETECTION_CONFIDENCE,
+    min_tracking_confidence=MIN_TRACKING_CONFIDENCE,
 )
 
-# Single hand static signs
 ISL_ONE_HAND = {
     (1, 0, 0, 0, 0): "A",
     (0, 1, 1, 1, 1): "B",
     (1, 1, 1, 1, 1): "C",
     (0, 1, 0, 0, 0): "D",
+    (0, 0, 0, 0, 0): "E",
+    (0, 1, 0, 1, 0): "F",
+    (0, 1, 1, 0, 1): "H",
     (0, 0, 0, 0, 1): "I",
+    (0, 0, 0, 1, 0): "O",
+    (1, 0, 0, 1, 0): "R",
     (1, 1, 0, 0, 0): "L",
+    (1, 1, 1, 0, 0): "U",
     (0, 1, 1, 0, 0): "V",
     (0, 1, 1, 1, 0): "W",
-    (1, 0, 0, 0, 1): "Y"
+    (1, 0, 0, 0, 1): "Y",
 }
 
 # Two-hand signs (tuples of left and right finger states)
@@ -33,73 +60,104 @@ ISL_TWO_HAND = {
     ((0, 1, 1, 1, 1), (0, 1, 1, 1, 1)): "BOTH B",  # Both hands open
 }
 
-def get_finger_states(lm, is_right):
+def get_finger_states(landmarks, is_right: bool) -> tuple:
+    """Determine which fingers are extended from hand landmarks."""
     tip_ids = [4, 8, 12, 16, 20]
     fingers = []
 
-    # Thumb
     if is_right:
-        fingers.append(1 if lm[4].x < lm[3].x else 0)
+        fingers.append(1 if landmarks[4].x < landmarks[3].x else 0)
     else:
-        fingers.append(1 if lm[4].x > lm[3].x else 0)
+        fingers.append(1 if landmarks[4].x > landmarks[3].x else 0)
 
-    # Other fingers
     for i in range(1, 5):
-        fingers.append(1 if lm[tip_ids[i]].y < lm[tip_ids[i]-2].y else 0)
+        fingers.append(1 if landmarks[tip_ids[i]].y < landmarks[tip_ids[i] - 2].y else 0)
 
     return tuple(fingers)
 
-# Webcam
-cap = cv2.VideoCapture(0)
+def main() -> None:\n    \"\"\"Run the ISL detector loop.\"\"\"\n    cap = cv2.VideoCapture(0)
+    if not cap.isOpened():
+        print("Error: Could not open camera")
+        return
+    cap.set(cv2.CAP_PROP_FRAME_WIDTH, FRAME_WIDTH)
+    cap.set(cv2.CAP_PROP_FRAME_HEIGHT, FRAME_HEIGHT)
+    actual_w = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+    actual_h = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+    logging.info(f"Camera resolution: {actual_w}x{actual_h}")
+    prev_time = 0
+    fps_samples = []
+    frame_count = 0
+    letter_history = []
 
-while True:
-    ret, img = cap.read()
-    if not ret:
-        break
+    while True:
+        ret, img = cap.read()
+        if not ret:
+            break
 
-    img = cv2.flip(img, 1)
-    rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-    results = hands.process(rgb)
+        img = cv2.flip(img, 1)
+        rgb = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        results = hands.process(rgb)
 
-    hand_states = []
-    handedness = []
+        hand_states = []
+        handedness = []
 
-    if results.multi_hand_landmarks:
-        for handLms, handed in zip(results.multi_hand_landmarks, results.multi_handedness):
-            is_right = handed.classification[0].label == "Right"
-            lm = handLms.landmark
-            fs = get_finger_states(lm, is_right)
-            hand_states.append(fs)
-            handedness.append(is_right)
+        if results.multi_hand_landmarks:
+            for handLms, handed in zip(results.multi_hand_landmarks, results.multi_handedness):
+                is_right = handed.classification[0].label == "Right"
+                lm = handLms.landmark
+                fs = get_finger_states(lm, is_right)
+                hand_states.append(fs)
+                handedness.append(is_right)
 
-            mp_drawing.draw_landmarks(img, handLms, mp_hands.HAND_CONNECTIONS)
+                mp_drawing.draw_landmarks(img, handLms, mp_hands.HAND_CONNECTIONS)
 
-    detected = None
+        detected_text = None
 
-    # One hand
-    if len(hand_states) == 1:
-        if hand_states[0] in ISL_ONE_HAND:
-            detected = ISL_ONE_HAND[hand_states[0]]
+        if len(hand_states) == 1:
+            detected_text = ISL_ONE_HAND.get(hand_states[0])
+            if detected_text:
+                letter_history.append(detected_text)
+                letter_history = letter_history[-10:]
+        elif len(hand_states) == 2:
+            left, right = hand_states
+            if handedness[0]:
+                left, right = hand_states[1], hand_states[0]
+            detected_text = ISL_TWO_HAND.get((left, right))
+            if detected_text:
+                letter_history.append(detected_text)
+                letter_history = letter_history[-10:]
 
-    # Two hands
-    elif len(hand_states) == 2:
-        # Ensure left, right order
-        if handedness[0]:
-            left, right = hand_states[1], hand_states[0]
-        else:
-            left, right = hand_states[0], hand_states[1]
+        curr_time = time.time()
+        fps = 1 / (curr_time - prev_time)
+        prev_time = curr_time
+        fps_samples.append(fps)
+        frame_count += 1
+        if len(fps_samples) > 30:
+            fps_samples.pop(0)
 
-        if (left, right) in ISL_TWO_HAND:
-            detected = ISL_TWO_HAND[(left, right)]
+        hand_count = len(hand_states)
+        draw_text(img, f"Hands: {hand_count}", (10, 30), color=UI_COLOR)
 
-    # Display
-    if detected:
-        cv2.putText(img, f"ISL: {detected}", (50, 50),
-                    cv2.FONT_HERSHEY_SIMPLEX, 1.2, (0, 255, 0), 2)
+        if detected_text:
+            draw_text(img, f"ISL: {detected_text}", (50, 50), scale=1.2, color=DETECTION_COLOR, thickness=2)
+            if letter_history:
+                history_str = " ".join(letter_history[-5:])
+                draw_text(img, f"Hist: {history_str}", (50, 85), color=LIGHT_GRAY)
 
-    cv2.imshow("Two-Hand ISL Detector", img)
-    if cv2.waitKey(1) & 0xFF == ord('q'):
-        break
+        draw_text(img, f"FPS: {fps_samples[-1]:.1f}", (10, img.shape[0] - 10), color=LIGHT_GRAY)
 
-cap.release()
-cv2.destroyAllWindows()
+        cv2.rectangle(img, (0, 0), (img.shape[1], 28), (20, 20, 20), -1)
+        draw_text(img, "ISL Detector v1.1", (10, 20), color=UI_COLOR)
+        cv2.imshow(WINDOW_NAME, img)
+        key = cv2.waitKey(1) & 0xFF
+        if key == QUIT_KEY:
+            break
+        elif key == ord('s'):
+            cv2.imwrite("isl_screenshot.png", img)
+            print("Screenshot saved")
+
+    cap.release()
+    cv2.destroyAllWindows()
+
+if __name__ == "__main__":
+    main()

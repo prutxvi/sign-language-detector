@@ -1,3 +1,38 @@
 __pycache__/
 *.pyc
 .env
+*.png
+*.jpg
+.DS_Store
+
+
+*.swp
+*.swo
+*~
+
+*.log
+.tmp
+dist/
+build/
+
+# IDEs
+.vscode/
+.idea/
+*.sublime-*
+
+# Secrets
+*.pem
+*.key
+.env.local
+
+# Secrets
+*.pem
+*.key
+.env.local
+
+.DS_Store
+*.pyc
+__pycache__/
+
+.env
+*.log
