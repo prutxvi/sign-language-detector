@@ -94,6 +94,7 @@ def main() -> None:
     while True:
         ret, img = cap.read()
         if not ret:
+            logging.warning("Failed to read frame from camera")
             break
 
         img = cv2.flip(img, 1)
@@ -130,7 +131,8 @@ def main() -> None:
                 letter_history = letter_history[-10:]
 
         curr_time = time.time()
-        fps = 1 / (curr_time - prev_time)
+        frame_delta = curr_time - prev_time
+        fps = 1 / frame_delta if frame_delta > 0 else 0
         prev_time = curr_time
         fps_samples.append(fps)
         frame_count += 1
