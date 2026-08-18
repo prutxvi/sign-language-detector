@@ -23,6 +23,7 @@ from config import (
     LIGHT_GRAY,
     DETECTION_COLOR,
     UI_COLOR,
+    HISTORY_SIZE,
 )
 
 mp_hands = mp.solutions.hands
@@ -138,7 +139,7 @@ def main() -> None:
         detected_text = detect_letter(hand_states, handedness)
         if detected_text:
             letter_history.append(detected_text)
-            letter_history = letter_history[-10:]
+            letter_history = letter_history[-HISTORY_SIZE:]
 
         curr_time = time.time()
         frame_delta = curr_time - prev_time
