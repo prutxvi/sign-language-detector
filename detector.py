@@ -156,10 +156,14 @@ def main() -> None:
         cv2.imshow(WINDOW_NAME, img)
         key = cv2.waitKey(1) & 0xFF
         if key == QUIT_KEY:
+            logging.info("Quit key pressed, stopping")
             break
         elif key == ord('s'):
             cv2.imwrite("isl_screenshot.png", img)
             print("Screenshot saved")
+        elif key == ord('c'):
+            letter_history.clear()
+            print("History cleared")
 
     cap.release()
     cv2.destroyAllWindows()
