@@ -32,10 +32,18 @@ pip install -r requirements.txt
 ## Usage
 
 ```bash
-python detector.py
+python detector.py            # uses default camera 0
+python detector.py --camera 1 # select a specific camera
 ```
 
-Press **Q** to quit. Press **S** to save a screenshot.
+Press **Q** to quit. Press **S** to save a screenshot. Press **C** to clear the detected letter history.
+
+## Testing
+
+```bash
+pip install pytest
+python -m pytest tests/
+```
 
 ## Project Structure
 
