@@ -91,7 +91,12 @@ def main() -> None:
     """Run the ISL detector loop."""
     parser = argparse.ArgumentParser(description="Real-time ISL alphabet detector")
     parser.add_argument("--camera", type=int, default=0, help="Camera device index")
+    parser.add_argument("--verbose", action="store_true", help="Enable debug logging")
     args = parser.parse_args()
+    logging.basicConfig(
+        level=logging.DEBUG if args.verbose else logging.INFO,
+        format="%(asctime)s %(message)s",
+    )
 
     cap = cv2.VideoCapture(args.camera)
     if not cap.isOpened():
