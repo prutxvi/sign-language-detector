@@ -2,7 +2,7 @@ from __future__ import annotations
 # -*- coding: utf-8 -*-
 """Real-time ISL alphabet detector using MediaPipe."""
 
-# -*- coding: utf-8 -*-
+import argparse
 import logging
 import time
 
@@ -89,7 +89,11 @@ def detect_letter(hand_states, handedness):
 
 def main() -> None:
     """Run the ISL detector loop."""
-    cap = cv2.VideoCapture(0)
+    parser = argparse.ArgumentParser(description="Real-time ISL alphabet detector")
+    parser.add_argument("--camera", type=int, default=0, help="Camera device index")
+    args = parser.parse_args()
+
+    cap = cv2.VideoCapture(args.camera)
     if not cap.isOpened():
         print("Error: Could not open camera")
         return
