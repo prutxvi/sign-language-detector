@@ -75,6 +75,18 @@ def get_finger_states(landmarks, is_right: bool) -> tuple:
 
     return tuple(fingers)
 
+
+def detect_letter(hand_states, handedness):
+    """Map detected hand states to an ISL letter or None."""
+    if len(hand_states) == 1:
+        return ISL_ONE_HAND.get(hand_states[0])
+    if len(hand_states) == 2:
+        left, right = hand_states
+        if handedness[0]:
+            left, right = hand_states[1], hand_states[0]
+        return ISL_TWO_HAND.get((left, right))
+    return None
+
 def main() -> None:
     """Run the ISL detector loop."""
     cap = cv2.VideoCapture(0)
@@ -114,21 +126,10 @@ def main() -> None:
 
                 mp_drawing.draw_landmarks(img, handLms, mp_hands.HAND_CONNECTIONS)
 
-        detected_text = None
-
-        if len(hand_states) == 1:
-            detected_text = ISL_ONE_HAND.get(hand_states[0])
-            if detected_text:
-                letter_history.append(detected_text)
-                letter_history = letter_history[-10:]
-        elif len(hand_states) == 2:
-            left, right = hand_states
-            if handedness[0]:
-                left, right = hand_states[1], hand_states[0]
-            detected_text = ISL_TWO_HAND.get((left, right))
-            if detected_text:
-                letter_history.append(detected_text)
-                letter_history = letter_history[-10:]
+        detected_text = detect_letter(hand_states, handedness)
+        if detected_text:
+            letter_history.append(detected_text)
+            letter_history = letter_history[-10:]
 
         curr_time = time.time()
         frame_delta = curr_time - prev_time
