@@ -1,1 +1,0 @@
-# sign-language-detector README

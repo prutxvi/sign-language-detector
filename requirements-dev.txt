@@ -1,5 +1,0 @@
-# Development dependencies
-pytest
-flake8
-mypy
-black
